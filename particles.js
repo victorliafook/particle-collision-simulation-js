@@ -12,6 +12,14 @@ class Particle {
     }
 
     update = (dt) => {
+        if (this.position.x >= width || this.position.x <= 0) {
+            this.hitVWall();
+        }
+
+        if (this.position.y >= height || this.position.y <= 0) {
+            this.hitHWall();
+        }
+
         this.position.add(this.velocity);    
     };
 
