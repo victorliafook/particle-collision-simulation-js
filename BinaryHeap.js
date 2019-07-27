@@ -18,12 +18,26 @@ class BinaryHeap {
     };
 
     sink = (index) => {
-
+        let leftChild = this.getLeftChild(index);
+        let bestChild = this.getBestChild(index);
+        
+        while (leftChild <= this.size() && this.less(bestChild, index)) {
+            this.exchange(index, bestChild);
+            index = bestChild;
+            bestChild = this.getBestChild();
+        }
     };
 
     insert = (item) => {
         this.heap.push(item);
         this.swim(this.size());
+    };
+
+    remove = () => {
+        this.exchange(1, this.size());
+        let returnVal = this.heap.pop();
+        this.sink(1);
+        return returnVal;
     };
 
     exchange = (i, j) => {
@@ -39,4 +53,24 @@ class BinaryHeap {
     getParent = (index) => {
         return Math.floor(index/2);
     };
+
+    getLeftChild = (index) => {
+        return 2 * index;
+    }
+
+    getBestChild = (index) => {
+        let leftChild = this.getLeftChild(index);
+        if (leftChild + 1 > this.size() || this.heap[leftChild].key < this.heap[leftChild + 1].key) {
+            return leftChild;
+        }
+        return leftChild + 1;
+    }
+
+    toString = () => {
+        let keys = [];
+        for (let i = 1; i <= this.size(); i++) {
+            keys.push(this.heap[i].key);
+        }
+        console.log(keys.join(','));
+    }
 }
