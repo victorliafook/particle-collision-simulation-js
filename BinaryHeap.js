@@ -18,13 +18,11 @@ class BinaryHeap {
     };
 
     sink = (index) => {
-        let leftChild = this.getLeftChild(index);
         let bestChild = this.getBestChild(index);
         
-        while (leftChild <= this.size() && this.less(bestChild, index)) {
+        while (bestChild <= this.size() && this.less(bestChild, index)) {
             this.exchange(index, bestChild);
             index = bestChild;
-            leftChild = this.getLeftChild(index);
             bestChild = this.getBestChild(index);
         }
     };
