@@ -1,0 +1,25 @@
+{
+  "name": "particle-collision-simulation",
+  "version": "1.0.0",
+  "description": "A particle collision simulation based on javascript and HTML5",
+  "main": "particlesSimulation.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "jasmine"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/victorliafook/particle-collision-simulation-js.git"
+  },
+  "author": "Victor Lia Fook",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/victorliafook/particle-collision-simulation-js/issues"
+  },
+  "homepage": "https://github.com/victorliafook/particle-collision-simulation-js#readme",
+  "devDependencies": {
+    "jasmine": "^3.4.0"
+  }
+}

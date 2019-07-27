@@ -24,7 +24,8 @@ class BinaryHeap {
         while (leftChild <= this.size() && this.less(bestChild, index)) {
             this.exchange(index, bestChild);
             index = bestChild;
-            bestChild = this.getBestChild();
+            leftChild = this.getLeftChild(index);
+            bestChild = this.getBestChild(index);
         }
     };
 
@@ -71,6 +72,8 @@ class BinaryHeap {
         for (let i = 1; i <= this.size(); i++) {
             keys.push(this.heap[i].key);
         }
-        console.log(keys.join(','));
+        return keys.join(',');
     }
 }
+
+module.exports = BinaryHeap;

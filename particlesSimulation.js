@@ -4,7 +4,7 @@ function setup() {
     particles = [];
     for (let i = 0; i <= 50; i++) {
         position = createVector(random(0, width), random(0, height)),
-        velocity = createVector(random(0, 5), random(0, 5));
+        velocity = createVector(random(0, 8), random(0, 8));
         particles.push(new Particle(position, velocity, 5));
     }
 }
