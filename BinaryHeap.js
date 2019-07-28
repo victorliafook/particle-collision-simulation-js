@@ -7,6 +7,10 @@ class BinaryHeap {
     size = () => {
         return this.heap.length - 1;
     };
+    
+    isEmpty = () => {
+        return this.size() === 0;
+    };
 
     swim = (index) => {
         let parentIndex = this.getParent(index);
@@ -33,6 +37,8 @@ class BinaryHeap {
     };
 
     remove = () => {
+        if (this.isEmpty())
+            throw new Error();
         this.exchange(1, this.size());
         let returnVal = this.heap.pop();
         this.sink(1);
@@ -46,7 +52,7 @@ class BinaryHeap {
     };
 
     less = (i, j) => {
-        return this.heap[j].key > this.heap[i].key;
+        return this.heap[i].key < this.heap[j].key;
     };
 
     getParent = (index) => {
@@ -59,7 +65,7 @@ class BinaryHeap {
 
     getBestChild = (index) => {
         let leftChild = this.getLeftChild(index);
-        if (leftChild + 1 > this.size() || this.heap[leftChild].key < this.heap[leftChild + 1].key) {
+        if (leftChild + 1 > this.size() || this.less(leftChild, leftChild + 1)) {
             return leftChild;
         }
         return leftChild + 1;
