@@ -47,11 +47,23 @@ class Particle {
     }
 
     timeToVWall = () => {
-
+        if (this.velocity.x > 0) {
+            return (1 - this.position.x - this.radius) / this.velocity.x;
+        } else if(this.velocity.x < 0) {
+            return (this.radius - this.position.x)  / this.velocity.x;
+        } else {
+            return INFINITY
+        }
     }
 
     timeToHWall = () => {
-
+        if (this.velocity.y > 0) {
+            return (1 - this.position.y - this.radius) / this.velocity.y;
+        } else if(this.velocity.y < 0) {
+             return (this.radius - this.position.y)  / this.velocity.y;
+        } else {
+            return INFINITY
+        }
     }
 
     hitParticle = (that) => {
