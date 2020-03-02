@@ -100,23 +100,8 @@ class Particle {
     }
 
     update = (dt) => {
-        if (this.position.x >= width || this.position.x <= 0) {
-            this.hitVWall();
-        }
-
-        if (this.position.y >= height || this.position.y <= 0) {
-            this.hitHWall();
-        }
-
-        this.position.add(this.velocity);    
+        this.position.add(p5.Vector.mult(this.velocity, dt));    
     };
-
-    display = () => {
-        stroke(200);
-        strokeWeight(2);
-        fill(127);
-        ellipse(this.position.x, this.position.y, this.radius, this.radius);
-    }
 
     timeToParticle = (that) => {
         if (this == that) return INFINITY;
@@ -134,7 +119,7 @@ class Particle {
         return -(dvdr + Math.sqrt(dist)) / dvdv;
     }
 
-    timeToVWall = () => {
+    timeToVWall = (width) => {
         if (this.velocity.x > 0) {
             return (width - this.position.x - this.radius) / this.velocity.x;
         } else if(this.velocity.x < 0) {
@@ -144,7 +129,7 @@ class Particle {
         }
     }
 
-    timeToHWall = () => {
+    timeToHWall = (height) => {
         if (this.velocity.y > 0) {
             return (height - this.position.y - this.radius) / this.velocity.y;
         } else if(this.velocity.y < 0) {
