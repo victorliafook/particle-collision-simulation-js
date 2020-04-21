@@ -12,46 +12,46 @@ class Particle {
     }
 
     update = (dt) => {
-        if (this.position.x >= width || this.position.x <= 0) {
-            this.hitVWall();
-        }
-
-        if (this.position.y >= height || this.position.y <= 0) {
-            this.hitHWall();
-        }
-
-        this.position.add(this.velocity);    
+        this.position.add(p5.Vector.mult(this.velocity, dt));    
     };
-
-    display = () => {
-        stroke(200);
-        strokeWeight(2);
-        fill(127);
-        ellipse(this.position.x, this.position.y, this.radius, this.radius);
-    }
 
     timeToParticle = (that) => {
         if (this == that) return INFINITY;
         var dp = p5.Vector.sub(that.position, this.position);
         var dv = p5.Vector.sub(that.velocity, this.velocity);
         var dvdr = dp.x * dv.x + dp.y * dv.y;
-
         if (dvdr > 0) return INFINITY;
+        
         var dvdv = dv.x * dv.x + dv.y * dv.y;
+        if (dvdv == 0) return INFINITY;
+        
         var drdr = dp.x * dp.x + dp.y * dp.y;
         var sigma = this.radius + that.radius;
         
         var dist = dvdr * dvdr - dvdv * (drdr - sigma * sigma);
         if (dist < 0) return INFINITY;
+        
         return -(dvdr + Math.sqrt(dist)) / dvdv;
     }
 
-    timeToVWall = () => {
-
+    timeToVWall = (width) => {
+        if (this.velocity.x > 0) {
+            return (width - this.position.x - this.radius) / this.velocity.x;
+        } else if(this.velocity.x < 0) {
+            return (this.radius - this.position.x)  / this.velocity.x;
+        } else {
+            return INFINITY
+        }
     }
 
-    timeToHWall = () => {
-
+    timeToHWall = (height) => {
+        if (this.velocity.y > 0) {
+            return (height - this.position.y - this.radius) / this.velocity.y;
+        } else if(this.velocity.y < 0) {
+             return (this.radius - this.position.y)  / this.velocity.y;
+        } else {
+            return INFINITY
+        }
     }
 
     hitParticle = (that) => {
@@ -61,10 +61,10 @@ class Particle {
         var sigma = this.radius + that.radius;
 
         var imp = 2 * this.mass * that.mass * dvdr / ((this.mass + that.mass) * sigma);
-        var imp_vector = imp/sigma * dp;
+        var imp_vector = p5.Vector.mult(dp, imp / sigma);
 
-        this.velocity.add(imp_vector / this.mass);
-        that.velocity.add(imp_vector / that.mass);
+        this.velocity.add(p5.Vector.div(imp_vector, this.mass));
+        that.velocity.sub(p5.Vector.div(imp_vector, that.mass));
 
         this.collisions++;
         that.collisions++;
@@ -72,9 +72,13 @@ class Particle {
 
     hitVWall = () => {
         this.velocity.x *= -1;
+        this.collisions++;
     }
 
     hitHWall = () => {
         this.velocity.y *= -1;
+        this.collisions++;
     }
 }
+
+module.exports = Particle;
