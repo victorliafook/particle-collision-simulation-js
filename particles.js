@@ -20,14 +20,17 @@ class Particle {
         var dp = p5.Vector.sub(that.position, this.position);
         var dv = p5.Vector.sub(that.velocity, this.velocity);
         var dvdr = dp.x * dv.x + dp.y * dv.y;
-
         if (dvdr > 0) return INFINITY;
+        
         var dvdv = dv.x * dv.x + dv.y * dv.y;
+        if (dvdv == 0) return INFINITY;
+        
         var drdr = dp.x * dp.x + dp.y * dp.y;
         var sigma = this.radius + that.radius;
         
         var dist = dvdr * dvdr - dvdv * (drdr - sigma * sigma);
         if (dist < 0) return INFINITY;
+        
         return -(dvdr + Math.sqrt(dist)) / dvdv;
     }
 
@@ -58,10 +61,10 @@ class Particle {
         var sigma = this.radius + that.radius;
 
         var imp = 2 * this.mass * that.mass * dvdr / ((this.mass + that.mass) * sigma);
-        var imp_vector = imp/sigma * dp;
+        var imp_vector = p5.Vector.mult(dp, imp / sigma);
 
-        this.velocity.add(imp_vector / this.mass);
-        that.velocity.add(imp_vector / that.mass);
+        this.velocity.add(p5.Vector.div(imp_vector, this.mass));
+        that.velocity.sub(p5.Vector.div(imp_vector, that.mass));
 
         this.collisions++;
         that.collisions++;

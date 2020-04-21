@@ -1,31 +1,32 @@
 var priorityQueue = new BinaryHeap();
 var time = 0;
-const limit = 50000;
-const rate = 4;
-const numOfParticles = 10;
+const TIME_LIMIT = 5000;
+const UPDATE_RATE = 4;
+const NUM_OF_PARTICLES = 10;
+const PARTICLE_RADIUS = 10;
 var particles = [];
 var canvas;
 
 async function setupSimulation(mycanvas) {
     new p5();
     
-    for (let i = 0; i < numOfParticles; i++) {
+    for (let i = 0; i < NUM_OF_PARTICLES; i++) {
         let position, velocity;
         position = createVector(random(0, mycanvas.width), random(0, mycanvas.height)),
         velocity = createVector(random(0, 8), random(0, 8));
-        particles.push(new Particle(position, velocity, 5));
+        particles.push(new Particle(position, velocity, PARTICLE_RADIUS));
     }
     
     for (let i = 0; i < particles.length; i++) {
         predict(particles[i], mycanvas.width, mycanvas.height);
     }
     
-    priorityQueue.insert({key: 0, a: null, b: null});   
+    priorityQueue.insert(new CollisionEvent(0, null, null));   
     
     while (!priorityQueue.isEmpty()) {
         let event = priorityQueue.remove();
         
-        if (!isValid(event)) continue;
+        if (!event.isValid()) continue;
         //console.log(particles[0].position);
         let a = event.a;
         let b = event.b;
@@ -72,15 +73,15 @@ function doDraw(canvas) {
             var posX = particles[i].position.x;
             var posY = particles[i].position.y;
             ctx.beginPath();
-            ctx.arc(posX, posY, 5, 0, Math.PI * 2);
+            ctx.arc(posX, posY, PARTICLE_RADIUS, 0, Math.PI * 2);
             ctx.fillStyle = "#000000";
             ctx.fill();
             ctx.closePath();
         }
     });
     
-    if (time < limit)
-        priorityQueue.insert({key: time + 1.0 / rate, a: null, b: null });
+    if (time < TIME_LIMIT)
+        priorityQueue.insert(new CollisionEvent(time + 1.0 / UPDATE_RATE, null, null));
 }
 
 function predict(a, width, height) {
@@ -89,23 +90,17 @@ function predict(a, width, height) {
     // particle-particle collisions
     for (let i = 0; i < particles.length; i++) {
         let dt = a.timeToParticle(particles[i]);
-        if (abs(time + dt) <= limit)
-            priorityQueue.insert({key: time + dt, a: a, b: particles[i], countA: a.collisions, countB: particles[i].collisions});
+        if ((time + dt) <= TIME_LIMIT)
+            priorityQueue.insert(new CollisionEvent(time + dt, a, particles[i]));
     }
 
     // particle-wall collisions
     let dtX = a.timeToVWall(width);
     let dtY = a.timeToHWall(height);
-    if (abs(time + dtX) <= limit) 
-        priorityQueue.insert({key: time + dtX, a: a, b: null, countA: a.collisions});
-    if (abs(time + dtY) <= limit)
-        priorityQueue.insert({key: time + dtY, a: null, b: a, countB: a.collisions});
+    if ((time + dtX) <= TIME_LIMIT) 
+        priorityQueue.insert(new CollisionEvent(time + dtX, a, null));
+    if ((time + dtY) <= TIME_LIMIT)
+        priorityQueue.insert(new CollisionEvent(time + dtY, null, a));
         
     //console.log(priorityQueue.toString());
-}
-
-function isValid(event) {
-    if (event.a != null && event.a.collisions != event.countA) return false;
-    if (event.b != null && event.b.collisions != event.countB) return false;
-    return true;
 }

@@ -83,9 +83,42 @@ class BinaryHeap {
 
 module.exports = BinaryHeap;
 },{}],2:[function(require,module,exports){
+const INFINITY = Number.MAX_SAFE_INTEGER;
+
+class CollisionEvent {
+
+    constructor(time, a, b) {
+        this.key = time;
+        this.a = a;
+        this.b = b;
+        if (a != null) {
+            this.countA = a.collisions;
+        } else {
+            this.countA = -1;
+        }
+        
+        if (b != null) {
+            this.countB = b.collisions;
+        } else {           
+            this.countB = -1;
+        }
+    }
+    
+    isValid = () => {
+        if (this.a != null && this.a.collisions != this.countA) return false;
+        if (this.b != null && this.b.collisions != this.countB) return false;
+        
+        return true;
+    }
+
+}
+
+module.exports = CollisionEvent;
+},{}],3:[function(require,module,exports){
 window.Particle = require('./particles');
+window.CollisionEvent = require('./CollisionEvent');
 window.BinaryHeap = require('./BinaryHeap');
-},{"./BinaryHeap":1,"./particles":3}],3:[function(require,module,exports){
+},{"./BinaryHeap":1,"./CollisionEvent":2,"./particles":4}],4:[function(require,module,exports){
 const INFINITY = Number.MAX_SAFE_INTEGER;
 
 class Particle {
@@ -108,14 +141,17 @@ class Particle {
         var dp = p5.Vector.sub(that.position, this.position);
         var dv = p5.Vector.sub(that.velocity, this.velocity);
         var dvdr = dp.x * dv.x + dp.y * dv.y;
-
         if (dvdr > 0) return INFINITY;
+        
         var dvdv = dv.x * dv.x + dv.y * dv.y;
+        if (dvdv == 0) return INFINITY;
+        
         var drdr = dp.x * dp.x + dp.y * dp.y;
         var sigma = this.radius + that.radius;
         
         var dist = dvdr * dvdr - dvdv * (drdr - sigma * sigma);
         if (dist < 0) return INFINITY;
+        
         return -(dvdr + Math.sqrt(dist)) / dvdv;
     }
 
@@ -146,10 +182,10 @@ class Particle {
         var sigma = this.radius + that.radius;
 
         var imp = 2 * this.mass * that.mass * dvdr / ((this.mass + that.mass) * sigma);
-        var imp_vector = imp/sigma * dp;
+        var imp_vector = p5.Vector.mult(dp, imp / sigma);
 
-        this.velocity.add(imp_vector / this.mass);
-        that.velocity.add(imp_vector / that.mass);
+        this.velocity.add(p5.Vector.div(imp_vector, this.mass));
+        that.velocity.sub(p5.Vector.div(imp_vector, that.mass));
 
         this.collisions++;
         that.collisions++;
@@ -167,4 +203,4 @@ class Particle {
 }
 
 module.exports = Particle;
-},{}]},{},[2]);
+},{}]},{},[3]);
