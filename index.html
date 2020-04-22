@@ -1,10 +1,54 @@
 <html>
     <head>
+        <title>Event Driven Particle Simulation</title>
+        <style>
+            canvas {
+                border: 1px solid #ccc;
+            }
+            
+            .main {
+                width: 100%;
+            }
+            
+            .main .control-center {
+                width: 300px;
+                margin: 0 auto;
+            }
+            
+            label {
+                margin: 3px 0;
+                display: block;
+            }
+        </style>
     </head>
+    
     <body onload="setupSimulation(document.getElementById('canvas'));">
-        <canvas id="canvas" width="300" height="300"></canvas>
-        <script src="lib/p5.js"></script>
+        <div class="main">
+            <div class="control-center">
+                <canvas id="canvas" width="300" height="300"></canvas>
+                
+                <label for="num_of_particles">Particles</label>
+                <input type="number" id="num_of_particles" value="100"/>
+                
+                <label for="particle_radius">Particle Radius</label>
+                <input type="number" id="particle_radius" value="1"/>
+                
+                <input type="button" id="start_simulation" value="Simulate"/>
+            </div>
+        </div>
+        
+        <script src="lib/p5.min.js"></script>
         <script src="bundle.js"></script>
         <script src="particlesSimulation.js"></script>
+        <script type="text/javascript">
+            new p5();
+            var startButton = document.getElementById("start_simulation");
+
+            startButton.addEventListener("click", () => {
+                NUM_OF_PARTICLES = parseInt(document.getElementById("num_of_particles").value);
+                PARTICLE_RADIUS = parseInt(document.getElementById("particle_radius").value);
+                setupSimulation(document.getElementById('canvas'));
+            });
+        </script>
     </body>
 </html>
