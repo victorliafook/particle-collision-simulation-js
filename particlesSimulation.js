@@ -2,8 +2,8 @@ var priorityQueue = new BinaryHeap();
 var time = 0;
 const TIME_LIMIT = 5000;
 const UPDATE_RATE = 4;
-const NUM_OF_PARTICLES = 10;
-const PARTICLE_RADIUS = 10;
+const NUM_OF_PARTICLES = 200;
+const PARTICLE_RADIUS = 1;
 var particles = [];
 var canvas;
 
@@ -11,9 +11,12 @@ async function setupSimulation(mycanvas) {
     new p5();
     
     for (let i = 0; i < NUM_OF_PARTICLES; i++) {
-        let position, velocity;
-        position = createVector(random(0, mycanvas.width), random(0, mycanvas.height)),
-        velocity = createVector(random(0, 8), random(0, 8));
+        let position, velocity, velocityXSign, velocityYSign;
+        position = createVector(random(0, mycanvas.width), random(0, mycanvas.height));
+        
+        velocityXSign = Math.round(Math.random()) * 2 - 1;
+        velocityYSign = Math.round(Math.random()) * 2 - 1;
+        velocity = createVector(velocityXSign * random(0, 10), velocityYSign * random(0, 10));
         particles.push(new Particle(position, velocity, PARTICLE_RADIUS));
     }
     
