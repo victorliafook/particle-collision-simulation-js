@@ -1,19 +1,23 @@
-var priorityQueue = new BinaryHeap();
+var priorityQueue;
 var time = 0;
-const TIME_LIMIT = 5000;
-const UPDATE_RATE = 4;
-const NUM_OF_PARTICLES = 10;
-const PARTICLE_RADIUS = 10;
-var particles = [];
-var canvas;
+var TIME_LIMIT = 5000;
+var UPDATE_RATE = 4;
+var NUM_OF_PARTICLES = 200;
+var PARTICLE_RADIUS = 1;
+var particles;
 
 async function setupSimulation(mycanvas) {
-    new p5();
+    time = 0;
+    particles = [];
+    priorityQueue = new BinaryHeap();
     
     for (let i = 0; i < NUM_OF_PARTICLES; i++) {
-        let position, velocity;
-        position = createVector(random(0, mycanvas.width), random(0, mycanvas.height)),
-        velocity = createVector(random(0, 8), random(0, 8));
+        let position, velocity, velocityXSign, velocityYSign;
+        position = createVector(random(0, mycanvas.width), random(0, mycanvas.height));
+        
+        velocityXSign = Math.round(Math.random()) * 2 - 1;
+        velocityYSign = Math.round(Math.random()) * 2 - 1;
+        velocity = createVector(velocityXSign * random(0, 10), velocityYSign * random(0, 10));
         particles.push(new Particle(position, velocity, PARTICLE_RADIUS));
     }
     
@@ -27,7 +31,7 @@ async function setupSimulation(mycanvas) {
         let event = priorityQueue.remove();
         
         if (!event.isValid()) continue;
-        //console.log(particles[0].position);
+
         let a = event.a;
         let b = event.b;
 
@@ -62,7 +66,7 @@ async function setupSimulation(mycanvas) {
 }
 
 function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
+    return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 function doDraw(canvas) {
@@ -102,5 +106,4 @@ function predict(a, width, height) {
     if ((time + dtY) <= TIME_LIMIT)
         priorityQueue.insert(new CollisionEvent(time + dtY, null, a));
         
-    //console.log(priorityQueue.toString());
 }
