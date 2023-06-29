@@ -2,8 +2,8 @@ var priorityQueue;
 var time = 0;
 var TIME_LIMIT = 5000;
 var UPDATE_RATE = 4;
-var NUM_OF_PARTICLES = 200;
-var PARTICLE_RADIUS = 1;
+var NUM_OF_PARTICLES = 100;
+var PARTICLE_RADIUS = 10;
 var particles;
 
 async function setupSimulation(mycanvas) {
@@ -71,17 +71,21 @@ function sleep(ms) {
 
 function doDraw(canvas) {
     requestAnimationFrame(function() {
+        
         let ctx = canvas.getContext('2d');
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-            for (let i = 0; i < particles.length; i++) {
+
+        ctx.fillStyle = 'rgb(6, 1, 11,0.5)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        for (let i = 0; i < particles.length; i++) {
             var posX = particles[i].position.x;
             var posY = particles[i].position.y;
             ctx.beginPath();
             ctx.arc(posX, posY, PARTICLE_RADIUS, 0, Math.PI * 2);
-            ctx.fillStyle = "#000000";
+            ctx.fillStyle = "#ffffff";
             ctx.fill();
             ctx.closePath();
-        }
+    }
     });
     
     if (time < TIME_LIMIT)
