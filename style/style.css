@@ -1,0 +1,41 @@
+*{
+    padding: 0;
+    margin: 0;
+}
+
+:root{
+    --color: rgb(253, 71, 71);
+    --bg   : rgb(6, 1, 11);
+}
+
+canvas{
+    position: absolute;
+    width: 100%;
+    height: auto;
+    background-color: var(--bg);
+    border-bottom: solid 3px var(--color);
+}
+
+.settings{
+    padding: 20px;
+    top: 20px;
+    right: 20px;
+    position: fixed;
+    border: solid 5px var(--color);
+}
+
+.settings label {
+    color: white;
+    display: inline-block;
+    width: 100%;
+}
+
+.settings .param{
+    margin-bottom: 20px;
+}
+
+.settings button{
+    width: 100%;
+    color: white;
+    border: solid 1px  var(--color);
+}
